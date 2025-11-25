@@ -378,6 +378,264 @@ Trade-off
 Trade-off é a validação das consequências ao escolher uma opção em detrimento de outra dentro da arquitetura de software. Toda decisão arquitetural implica ganhos e perdas, e o papel do arquiteto é analisar cuidadosamente essas trocas para equilibrar prioridades como desempenho, segurança, escalabilidade, custos, manutenção e tempo de entrega. Não existe solução perfeita; cada escolha traz benefícios em certos aspectos, mas também limitações em outros. Por exemplo, optar por uma arquitetura de micro serviços pode aumentar a escalabilidade e a flexibilidade, mas, ao mesmo tempo, elevar a complexibilidade operacional e os custos de monitoramento. O processo de análise de trade-offs exige considerar o contexto do negócio, os requisitos de qualidade e as restrições existentes, avaliando impactos de curto e longo prazo. Dessa forma, um arquiteto eficiente não busca eliminar os trade-offs, mas sim tomar decisões conscientes e justificadas, comunicando claramente às partes interessadas os motivos da escolha.
 
 
+Segundo Bimestre 
+Aula 29/09 – Circuit Breaker
+
+O Circuit Breaker protege a comunicação entre sistemas, funcionando como um disjuntor que evita falhas encadeadas.
+
+Estados
+
+Closed (Fechado)
+Comunicação normal; tudo funcionando.
+
+Open (Aberto)
+Erros ou timeouts ultrapassam um limite; novas chamadas são bloqueadas.
+
+Half-open (Meio aberto)
+O sistema testa novamente a comunicação.
+
+Se funcionar repetidas vezes → volta para Closed
+
+Se falhar → retorna para Open
+
+Exemplo:
+Se o serviço A chamar B e ocorrerem vários timeouts, o circuito abre.
+Após um tempo, entra em Half-open para testar.
+Sucesso → volta ao normal. Falha → abre novamente.
+
+Aula 06/10 – Características Arquiteturais
+
+Uma característica de arquitetura deve:
+
+Representar uma preocupação de design fora do domínio do negócio.
+
+Impactar diretamente a estrutura do sistema.
+
+Ser essencial para o sucesso da aplicação.
+
+Podem ser vistas como três critérios em equilíbrio (um “triângulo” arquitetural).
+
+Aula 07/10 – CQRS
+
+CQRS (Command Query Responsibility Segregation) separa operações de leitura e escrita.
+
+Benefícios:
+
+Cada parte pode ser otimizada de forma independente.
+
+Facilita manutenção e escalabilidade.
+
+Melhora organização e desempenho quando bem aplicado.
+
+Aula 13/10 – Retry & Estilos Arquiteturais
+Retry
+
+Imediato: tenta novamente logo após falha.
+
+Com atraso: aguarda algum tempo antes de nova tentativa.
+
+Estilos Arquiteturais
+
+Um software pode usar vários padrões juntos.
+
+Grande Bola de Lama: código bagunçado, sem planejamento, difícil de evoluir.
+
+Arquitetura Unitaria: comum em softwares embarcados (micro-ondas, geladeiras etc.).
+
+Cliente/Servidor: separação clara de papéis.
+
+Desktop + Servidor de Banco: vários PCs acessam um servidor com o banco.
+
+Navegador + Servidor Web: navegador acessa o web server, que acessa o banco.
+
+Aula 14/10 – Monolito, Microsserviços e Falácias
+Monolito
+
+Tudo no mesmo projeto, fácil de iniciar, mas pode virar um gargalo quando cresce demais.
+
+Microsserviços
+
+Vários serviços menores e independentes, cada um com responsabilidade específica.
+
+Microsserviços não são solução mágica — há cenários onde o monolito é melhor.
+
+Falácias de Sistemas Distribuídos
+
+A rede não falha
+
+Latência é insignificante
+
+Largura de banda infinita
+
+Rede totalmente segura
+
+Topologia não muda
+
+Padrões em Arquiteturas Distribuídas
+
+Log distribuído: centralização de logs de vários serviços.
+
+Transações distribuídas: operações que envolvem múltiplos serviços e precisam de coordenação.
+
+Aula 20/10 – Arquitetura em Camadas
+
+Arquitetura simples, comum e de baixo custo.
+
+Camadas típicas
+
+Apresentação
+
+Negócio
+
+Persistência
+
+Banco de dados
+
+Cada camada possui responsabilidade própria e deve permanecer isolada.
+
+Benefícios
+
+Manutenção facilitada
+
+Organização clara
+
+Troca de componentes sem afetar o restante
+
+Tipos de Camadas
+
+Fechadas: acessam apenas a camada imediatamente abaixo.
+
+Abertas: permitem inserir camadas intermediárias.
+
+Antipadrão: Sinkhole
+
+Requisições atravessam muitas camadas sem lógica útil.
+Aceitável até ~20%. Acima disso, má arquitetura.
+
+Boa escolha quando:
+
+Sistema pequeno
+
+Pouco tempo ou orçamento
+
+Requisitos ainda pouco claros
+
+Aula 27/10 – Arquitetura Pipeline
+
+Processamento ocorre em etapas sequenciais.
+
+Componentes típicos:
+
+Produtor
+
+Transformador
+
+Verificador
+
+Consumidor
+
+Aula 03/11 – Arquitetura Microkernel
+
+O núcleo possui apenas o essencial. Quase todas as funcionalidades são adicionadas por plug-ins.
+
+Plug-ins
+
+Autônomos e independentes
+
+Contêm código que pode mudar com frequência
+
+Conectam-se diretamente ao núcleo
+
+Quando remotos, tornam o sistema distribuído (mais complexo)
+
+Registro de Plug-ins
+
+Pode ser um mapa simples (chave → plug-in)
+
+Ou um sistema avançado de descoberta
+
+Contratos
+
+Definem regras de comunicação entre núcleo e plug-ins.
+
+Pontos Fortes
+
+Simples
+
+Barato
+
+Alta testabilidade
+
+Confiável
+
+Pontos Fracos
+
+Escalabilidade limitada
+
+Baixa tolerância a falhas
+
+Elasticidade baixa
+
+Aula 10/11 – Arquitetura de Microsserviços
+
+Inspirada no DDD, especialmente nos bounded contexts.
+
+Cada serviço contém apenas o necessário para operar.
+
+Distribuição
+
+Rodam em máquinas/VMs separadas → maior latência e mais verificações de segurança.
+
+Contexto Delimitado
+
+Cada microsserviço representa um domínio ou fluxo completo.
+
+Granularidade
+
+Não deve ser “micro demais”.
+
+Serviços que dependem muito uns dos outros talvez precisem ser unidos.
+
+Isolamento de Dados
+
+Cada serviço possui seu próprio banco, podendo escolher tecnologias diferentes.
+
+Camada de API
+
+Expõe funcionalidades
+
+Não deve orquestrar serviços
+
+Sidecar
+
+Centraliza operações como logs, monitoramento e segurança.
+
+Front-Ends
+
+Dois estilos:
+
+Usar diretamente a API
+
+Ser um microsserviço independente
+
+Comunicação
+
+Síncrona ou assíncrona
+
+Coreografia orientada a eventos é preferível
+
+Orquestração é centralizada e menos alinhada à filosofia
+
+Transações
+
+Evitar transações entre serviços.
+Usar Sagas para manter consistência.
+
+Resumo
+
+Vantagens: escalável, elástico, evolui continuamente
+Desvantagens: mais latência, mais sobrecarga por segurança e rede
+
 
 
 
