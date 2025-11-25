@@ -1,0 +1,16 @@
+package br.univille.microkernel_plugin.service;
+
+import java.util.HashMap;
+import org.springframework.http.HttpStatus;
+import br.univille.microkernel_interface.service.DefaultService;
+
+public class ServiceOneImpl implements DefaultService
+{
+
+    @Override
+    public HttpStatus doWork(HashMap<String, String> params) {
+        System.out.println("Service ONE: " + params);
+        return HttpStatus.OK;
+    }
+
+}
